@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ArchitectCoders</string>
+    <string name="back">back</string>
+    <string name="error_loading_profile">error loading profile</string>
+</resources>
