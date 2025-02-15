@@ -30,21 +30,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.architectcoders.data.Stock
+import com.example.architectcoders.ui.common.LoadingProgressIndicator
 
 @Composable
 fun HomeScreen( modifier: Modifier = Modifier, onClick: (String) -> Unit) {
     val viewModel: HomeViewModel = viewModel()
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
-        println("HomeScreen: LaunchedEffect triggered")
         viewModel.onUiReady()
     }
 
-    Box(modifier = modifier.fillMaxSize().statusBarsPadding()) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .statusBarsPadding()) {
         if (state.loading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+            LoadingProgressIndicator()
         } else {
             StockList(stocks = state.stocks, modifier = Modifier.fillMaxSize(), onClick = { symbol ->
                 onClick(symbol)
@@ -53,6 +53,7 @@ fun HomeScreen( modifier: Modifier = Modifier, onClick: (String) -> Unit) {
         }
     }
 }
+
 
 @Composable
 fun StockList(stocks: List<Stock>, modifier: Modifier = Modifier, onClick: (String) -> Unit) {
@@ -93,7 +94,10 @@ fun StockItem(stock: Stock, modifier: Modifier = Modifier, onClick: (String) -> 
                 Box(
                     modifier = Modifier
                         .padding(4.dp)
-                        .background(backgroundColor, shape = RoundedCornerShape(4.dp)) // Fondo dinámico con borde redondeado
+                        .background(
+                            backgroundColor,
+                            shape = RoundedCornerShape(4.dp)
+                        ) // Fondo dinámico con borde redondeado
                         .padding(horizontal = 8.dp, vertical = 4.dp) // Padding interno para que el texto no toque los bordes
                 )
                 {

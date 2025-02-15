@@ -1,13 +1,14 @@
 package com.example.architectcoders.data
 
 
-class SymbolsRepository {
+class SymbolsRepository (private val symbolsService: SymbolsService) {
 
     suspend fun fetchPopularStocks(): List<Stock> =
 
-        SymbolsClient.instance.fetchPopularStocks().body.map { it.toDomainModel() }
+        symbolsService.fetchPopularStocks().body.map { it.toDomainModel() }
+
     suspend fun fetchStockProfile(symbol:String): StockDetail =
-        SymbolsClient.instance.fetchStockDetails(symbol).toDomainModel()
+        symbolsService.fetchStockDetails(symbol).toDomainModel()
 
 }
 

@@ -3,6 +3,7 @@ package com.example.architectcoders.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.architectcoders.data.Stock
+import com.example.architectcoders.data.SymbolsClient
 import com.example.architectcoders.data.SymbolsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +15,7 @@ class HomeViewModel: ViewModel() {
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    private val repository = SymbolsRepository()
+    private val repository = SymbolsRepository(SymbolsClient.instance)
 
         fun onUiReady() {
             viewModelScope.launch{
