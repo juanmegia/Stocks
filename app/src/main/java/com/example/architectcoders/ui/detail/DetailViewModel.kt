@@ -29,7 +29,7 @@ class DetailViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Default) {
             state.update { it.copy(loading = true) }
             repository.fetchStockProfile(symbol).collect{
-                profile ->  state.update { currentState -> currentState.copy(profile = profile)}
+                profile ->  state.update { currentState -> currentState.copy(profile = profile, loading = false)}
             }
         }
     }
