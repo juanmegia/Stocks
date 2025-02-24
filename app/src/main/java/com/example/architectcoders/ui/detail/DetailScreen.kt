@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -38,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.architectcoders.R
 import com.example.architectcoders.data.CompanyOfficerSummary
 import com.example.architectcoders.data.StockDetail
@@ -49,15 +49,14 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun DetailScreen(
     symbol: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: DetailViewModel
 ) {
-    val viewModel: DetailViewModel = viewModel()
+    println(viewModel.toString())
     val state by rememberFlowWithLifecycle(viewModel.uiState).collectAsState(initial = DetailViewModel.UiState())
     val detailState = rememberDetailState()
     
-    detailState.ShowMessageEffect(message = state.message) {
-        viewModel.onAction(DetailAction.MessageShown)
-    }
+
     LaunchedEffect(symbol) {
         viewModel.onUiReady(symbol)
     }
@@ -81,9 +80,10 @@ fun DetailScreen(
             )
         },
         floatingActionButton = {
+            val favorite = state.profile?.isFavorite ?: false
             FloatingActionButton(onClick = { viewModel.onAction(DetailAction.FavoriteClick)}) {
-                Icon(imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = stringResource(id = R.string.back))
+                Icon(imageVector = if(favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = stringResource(id = R.string.mark_as_favorite))
             }
         },
         snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState)}
@@ -142,11 +142,11 @@ fun DetailContent(profile: StockDetail, modifier: Modifier) {
             Text(
                 text = profile.businessSummary,
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = if (expanded) Int.MAX_VALUE else 10, // Show 10 lines initially
+                maxLines = if (expanded) Int.MAX_VALUE else 10,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { expanded = !expanded } // Toggle on click
+                    .clickable { expanded = !expanded }
             )
 
         }

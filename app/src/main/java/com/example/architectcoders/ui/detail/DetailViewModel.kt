@@ -1,54 +1,54 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.architectcoders.App
 import com.example.architectcoders.data.StockDetail
-import com.example.architectcoders.data.SymbolsClient
+import com.example.architectcoders.data.datasource.remote.SymbolsClient
 import com.example.architectcoders.data.SymbolsRepository
+import com.example.architectcoders.data.datasource.SymbolsLocalDataSource
+import com.example.architectcoders.data.datasource.SymbolsRemoteDataSource
+import com.example.architectcoders.data.datasource.database.SymbolsDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed interface DetailAction {
     data object FavoriteClick : DetailAction
-    data object MessageShown : DetailAction
 }
 class DetailViewModel : ViewModel() {
     private var state = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = state.asStateFlow()
-    private val repository = SymbolsRepository(SymbolsClient.instance)
+    private val symbolsDao: SymbolsDao = App.instance.db.symbolsDao()
+    private val localDataSource = SymbolsLocalDataSource(symbolsDao)
+    private val repository = SymbolsRepository( SymbolsRemoteDataSource(SymbolsClient.instance), localDataSource)
+
 
     fun onUiReady(symbol: String) {
         viewModelScope.launch(Dispatchers.Default) {
             state.update { it.copy(loading = true) }
-            val fetchedProfile = repository.fetchStockProfile(symbol)
-            state.update { currentState -> currentState.copy(profile = fetchedProfile)}
-            if (state.value.profile != null) {
-                state.update { it.copy(loading = false) }
+            repository.fetchStockProfile(symbol).collect{
+                profile ->  state.update { currentState -> currentState.copy(profile = profile)}
             }
         }
     }
     fun onAction(action:DetailAction) {
         when (action){
             is DetailAction.FavoriteClick -> onFavoriteClick()
-            is DetailAction.MessageShown -> onMessageShown()
+            else -> {}
         }
     }
-    fun onFavoriteClick() {
-        state.update {it.copy(message = "Favorite clicked")}
-    }
-
-    fun onMessageShown() {
-        state.update { it.copy(message = null)}
+    private fun onFavoriteClick() {
+        state.value.profile?.let {
+            viewModelScope.launch {
+                repository.toggleFavorite(it.companySymbol)
+            }
+        }
     }
 
     data class UiState(
         val profile: StockDetail? = null,
-        val loading: Boolean = false,
-        val message: String? = null
+        val loading: Boolean = false
     )
 }

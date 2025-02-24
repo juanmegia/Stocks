@@ -2,4 +2,5 @@
     <string name="app_name">ArchitectCoders</string>
     <string name="back">back</string>
     <string name="error_loading_profile">error loading profile</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
 </resources>

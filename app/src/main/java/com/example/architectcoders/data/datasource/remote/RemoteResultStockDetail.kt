@@ -1,4 +1,4 @@
-package com.example.architectcoders.data
+package com.example.architectcoders.data.datasource.remote
 
 import kotlinx.serialization.Serializable
 
@@ -19,23 +19,23 @@ data class MetaProfile(
 @Serializable
 data class AssetProfile(
     val address1: String,
-    val auditRisk: Int,
-    val boardRisk: Int,
+    val auditRisk: Int = 0,
+    val boardRisk: Int = 0,
     val city: String,
     val companyOfficers: List<CompanyOfficer>,
     val compensationAsOfEpochDate: Int,
-    val compensationRisk: Int,
+    val compensationRisk: Int = 0,
     val country: String,
     val fullTimeEmployees: Int,
-    val governanceEpochDate: Int,
+    val governanceEpochDate: Int = 0,
     val industry: String,
     val longBusinessSummary: String,
     val maxAge: Int,
-    val overallRisk: Int,
+    val overallRisk: Int = 0,
     val phone: String,
     val sector: String,
-    val shareHolderRightsRisk: Int,
-    val state: String,
+    val shareHolderRightsRisk: Int = 0,
+    val state: String = "",
     val website: String,
     val zip: String
 )

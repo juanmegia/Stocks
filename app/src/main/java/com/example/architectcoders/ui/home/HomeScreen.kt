@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,13 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.architectcoders.data.Stock
 import com.example.architectcoders.ui.common.LoadingProgressIndicator
 
 @Composable
-fun HomeScreen( modifier: Modifier = Modifier, onClick: (String) -> Unit) {
-    val viewModel: HomeViewModel = viewModel()
+fun HomeScreen( modifier: Modifier = Modifier, onClick: (String) -> Unit, viewModel: HomeViewModel) {
+
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.onUiReady()
@@ -49,42 +52,64 @@ fun HomeScreen( modifier: Modifier = Modifier, onClick: (String) -> Unit) {
             StockList(stocks = state.stocks, modifier = Modifier.fillMaxSize(), onClick = { symbol ->
                 onClick(symbol)
                 viewModel.onClear()
-            })
+            }, onToggleFavorite = viewModel::onFavoriteClick)
         }
     }
 }
 
 
 @Composable
-fun StockList(stocks: List<Stock>, modifier: Modifier = Modifier, onClick: (String) -> Unit) {
+fun StockList(stocks: List<Stock>, modifier: Modifier = Modifier, onClick: (String) -> Unit, onToggleFavorite: (String) -> Unit) {
     LazyColumn(modifier = modifier) {
         items(stocks) { stock ->
-            StockItem(stock = stock, modifier = Modifier.fillMaxWidth(), onClick = onClick)
+            StockItem(stock = stock, modifier = Modifier.fillMaxWidth(), onClick = onClick, onToggleFavorite = onToggleFavorite)
         }
     }
 }
 
 @Composable
-fun StockItem(stock: Stock, modifier: Modifier = Modifier, onClick: (String) -> Unit) {
-    val backgroundColor = when {
-        stock.netChange.startsWith("-") -> Color.Red
-        else -> Color.Green
-    }
+fun StockItem(
+    stock: Stock,
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit,
+    onToggleFavorite: (String) -> Unit
+) {
+    val backgroundColor = if (stock.netChange.startsWith("-")) Color.Red else Color.Green
+
     Card(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
             .clickable { onClick(stock.symbol) },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = stock.symbol, style = MaterialTheme.typography.titleLarge)
-            Text(text = stock.name, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = stock.symbol, style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = stock.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                }
+
+                IconButton(onClick = { onToggleFavorite(stock.symbol) }) {
+                    Icon(
+                        imageVector = if (stock.isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
+                        contentDescription = "Favorite",
+                        tint = if (stock.isFavorite) Color.Yellow else Color.Gray
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -97,10 +122,9 @@ fun StockItem(stock: Stock, modifier: Modifier = Modifier, onClick: (String) -> 
                         .background(
                             backgroundColor,
                             shape = RoundedCornerShape(4.dp)
-                        ) // Fondo dinámico con borde redondeado
-                        .padding(horizontal = 8.dp, vertical = 4.dp) // Padding interno para que el texto no toque los bordes
-                )
-                {
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
                     Text(
                         text = "Change: ${stock.netChange} (${stock.pctChange})",
                         style = MaterialTheme.typography.bodySmall,
@@ -113,3 +137,4 @@ fun StockItem(stock: Stock, modifier: Modifier = Modifier, onClick: (String) -> 
         }
     }
 }
+

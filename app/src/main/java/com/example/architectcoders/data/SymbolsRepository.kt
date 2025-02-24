@@ -1,43 +1,27 @@
 package com.example.architectcoders.data
 
+import com.example.architectcoders.data.datasource.SymbolsLocalDataSource
+import com.example.architectcoders.data.datasource.SymbolsRemoteDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 
-class SymbolsRepository (private val symbolsService: SymbolsService) {
 
-    suspend fun fetchPopularStocks(): List<Stock> =
+class SymbolsRepository (private val symbolsRemoteDataSource: SymbolsRemoteDataSource, private val localDataSource: SymbolsLocalDataSource) {
+    val stocks: Flow<List<Stock>> = localDataSource.stocks.transform { localStocks ->
+        val stocks = localStocks.takeIf { it.isNotEmpty() } ?: symbolsRemoteDataSource.fetchPopularStocks().also { localDataSource.insertStocks(it) }
+        emit(stocks)
+    }
 
-        symbolsService.fetchPopularStocks().body.map { it.toDomainModel() }
-
-    suspend fun fetchStockProfile(symbol:String): StockDetail =
-        symbolsService.fetchStockDetails(symbol).toDomainModel()
-
+    suspend fun fetchStockProfile(symbol:String): Flow<StockDetail?> = localDataSource.getStockProfile(symbol).transform { localProfile ->
+        val profile = localProfile?: symbolsRemoteDataSource.fetchStockProfile(symbol).also {
+            localDataSource.insertStockDetail(it)  }
+        emit(profile)
+    }
+    suspend fun toggleFavorite(symbol: String){
+        localDataSource.toggleFavorite(symbol)
+    }
 }
 
-private fun  RemoteStock.toDomainModel(): Stock =
-    Stock(
-        symbol = this.symbol,
-        name = this.name,
-        lastSale = this.lastsale,
-        netChange = this.netchange,
-        pctChange = this.pctchange,
-        marketCap = this.marketCap
-    )
 
-private fun RemoteResultStockDetail.toDomainModel(): StockDetail {
-    return StockDetail(
-        companySymbol = this.meta.symbol,
-        industry = this.body.industry,
-        sector = this.body.sector,
-        businessSummary = this.body.longBusinessSummary,
-        address = "${this.body.address1}, ${this.body.city}, ${this.body.state}, ${this.body.country}",
-        phone = this.body.phone,
-        website = this.body.website,
-        fullTimeEmployees = this.body.fullTimeEmployees,
-        companyOfficers = this.body.companyOfficers.map { officer ->
-            CompanyOfficerSummary(
-                name = officer.name,
-                title = officer.title,
-                totalPay = officer.totalPay?.fmt
-            )
-        }
-    )
-}
+
+

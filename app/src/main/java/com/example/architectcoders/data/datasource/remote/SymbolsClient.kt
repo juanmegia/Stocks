@@ -1,6 +1,7 @@
-package com.example.architectcoders.data
+package com.example.architectcoders.data.datasource.remote
 
 import com.example.architectcoders.BuildConfig
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -15,9 +16,11 @@ object SymbolsClient {
 
     private const val BASE_URL = "https://yahoo-finance15.p.rapidapi.com/api/"
 
+    @OptIn(ExperimentalSerializationApi::class)
     private val json = Json{
         ignoreUnknownKeys = true
         coerceInputValues = true
+        explicitNulls = true
     }
     private val client = OkHttpClient.Builder()
         .addInterceptor { apiKeyAsHeader(it) }

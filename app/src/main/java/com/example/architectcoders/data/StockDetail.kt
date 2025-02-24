@@ -1,6 +1,11 @@
 package com.example.architectcoders.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class StockDetail(
+    @PrimaryKey
     val companySymbol: String,
     val industry: String,
     val sector: String,
@@ -9,7 +14,8 @@ data class StockDetail(
     val phone: String,
     val website: String,
     val fullTimeEmployees: Int,
-    val companyOfficers: List<CompanyOfficerSummary>
+    val companyOfficers: List<CompanyOfficerSummary>,
+    val isFavorite: Boolean = false
 )
 
 data class CompanyOfficerSummary(
