@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.architectcoders.data.datasource.remote.Converters
+import kotlinx.serialization.Serializable
 
 @Entity
 data class StockDetail(
@@ -20,7 +21,7 @@ data class StockDetail(
     val companyOfficers: List<CompanyOfficerSummary>,
     val isFavorite: Boolean = false
 )
-
+@Serializable
 data class CompanyOfficerSummary(
     val name: String,
     val title: String,
