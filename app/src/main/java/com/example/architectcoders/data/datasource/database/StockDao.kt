@@ -1,10 +1,10 @@
-package com.example.architectcoders.data
+package com.example.architectcoders.data.datasource.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Stock(
+data class StockDao(
     @PrimaryKey(autoGenerate = false)
     val symbol: String,
     val name: String,

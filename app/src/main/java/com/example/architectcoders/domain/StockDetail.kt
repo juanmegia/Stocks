@@ -1,14 +1,7 @@
-package com.example.architectcoders.data
+package com.example.architectcoders.domain
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.example.architectcoders.data.datasource.remote.Converters
-import kotlinx.serialization.Serializable
 
-@Entity
 data class StockDetail(
-    @PrimaryKey
     val companySymbol: String,
     val industry: String,
     val sector: String,
@@ -17,11 +10,10 @@ data class StockDetail(
     val phone: String,
     val website: String,
     val fullTimeEmployees: Int,
-    @TypeConverters(Converters::class)
     val companyOfficers: List<CompanyOfficerSummary>,
     val isFavorite: Boolean = false
 )
-@Serializable
+
 data class CompanyOfficerSummary(
     val name: String,
     val title: String,

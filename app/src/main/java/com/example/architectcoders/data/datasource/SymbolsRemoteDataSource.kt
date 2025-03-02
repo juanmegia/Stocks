@@ -1,18 +1,19 @@
 package com.example.architectcoders.data.datasource
 
-import com.example.architectcoders.data.CompanyOfficerSummary
 import com.example.architectcoders.data.datasource.remote.RemoteResultStockDetail
 import com.example.architectcoders.data.datasource.remote.RemoteStock
-import com.example.architectcoders.data.Stock
-import com.example.architectcoders.data.StockDetail
+import com.example.architectcoders.domain.Stock
+import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.data.datasource.remote.SymbolsService
+import com.example.architectcoders.domain.CompanyOfficerSummary
+import com.example.architectcoders.domain.RemoteDataSource
 
-class SymbolsRemoteDataSource(private val symbolsService: SymbolsService) {
-    suspend fun fetchPopularStocks(): List<Stock> =
+class SymbolsRemoteDataSource(private val symbolsService: SymbolsService) : RemoteDataSource {
+    override suspend fun fetchPopularStocks(): List<Stock> =
 
         symbolsService.fetchPopularStocks().body.map { it.toDomainModel() }
 
-    suspend fun fetchStockProfile(symbol:String): StockDetail =
+    override suspend fun fetchStockProfile(symbol:String): StockDetail =
         symbolsService.fetchStockDetails(symbol).toDomainModel()
 }
 private fun RemoteStock.toDomainModel(): Stock =

@@ -32,30 +32,56 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.architectcoders.data.Stock
+import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.ui.common.LoadingProgressIndicator
+import com.example.architectcoders.domain.Result
 
 @Composable
-fun HomeScreen( modifier: Modifier = Modifier, onClick: (String) -> Unit, viewModel: HomeViewModel) {
-
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit,
+    viewModel: HomeViewModel
+) {
     val state by viewModel.state.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.onUiReady()
     }
 
-    Box(modifier = modifier
-        .fillMaxSize()
-        .statusBarsPadding()) {
-        if (state.loading) {
-            LoadingProgressIndicator()
-        } else {
-            StockList(stocks = state.stocks, modifier = Modifier.fillMaxSize(), onClick = { symbol ->
-                onClick(symbol)
-                viewModel.onClear()
-            }, onToggleFavorite = viewModel::onFavoriteClick)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding(),
+        contentAlignment = Alignment.Center
+    ) {
+        when (state) {
+            is Result.Loading -> {
+                LoadingProgressIndicator()
+            }
+
+            is Result.Success -> {
+                StockList(
+                    stocks = (state as Result.Success).data,
+                    modifier = Modifier.fillMaxSize(),
+                    onClick = { symbol ->
+                        onClick(symbol)
+                        viewModel.onClear()
+                    },
+                    onToggleFavorite = viewModel::onFavoriteClick
+                )
+            }
+
+            is Result.Error -> {
+                Text(
+                    text = "Error: ${(state as Result.Error).throwable.message}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
     }
 }
+
 
 
 @Composable

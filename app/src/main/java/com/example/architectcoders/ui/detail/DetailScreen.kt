@@ -40,10 +40,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.example.architectcoders.R
-import com.example.architectcoders.data.CompanyOfficerSummary
-import com.example.architectcoders.data.StockDetail
+import com.example.architectcoders.domain.CompanyOfficerSummary
+import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.ui.common.LoadingProgressIndicator
 import kotlinx.coroutines.flow.Flow
+import com.example.architectcoders.domain.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,25 +53,21 @@ fun DetailScreen(
     onBack: () -> Unit,
     viewModel: DetailViewModel
 ) {
-    println(viewModel.toString())
-    val state by rememberFlowWithLifecycle(viewModel.uiState).collectAsState(initial = DetailViewModel.UiState())
+    val state by rememberFlowWithLifecycle(viewModel.uiState)
+        .collectAsState(initial = Result.Loading)
+
     val detailState = rememberDetailState()
-    
 
     LaunchedEffect(symbol) {
         viewModel.onUiReady(symbol)
     }
-
-
-
-
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = symbol) },
                 navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.back)
@@ -80,39 +77,42 @@ fun DetailScreen(
             )
         },
         floatingActionButton = {
-            val favorite = state.profile?.isFavorite ?: false
-            FloatingActionButton(onClick = { viewModel.onAction(DetailAction.FavoriteClick)}) {
-                Icon(imageVector = if(favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = stringResource(id = R.string.mark_as_favorite))
+            if (state is Result.Success) {
+                val favorite = (state as Result.Success).data.isFavorite
+                FloatingActionButton(onClick = { viewModel.onAction(DetailAction.FavoriteClick) }) {
+                    Icon(
+                        imageVector = if (favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = stringResource(id = R.string.mark_as_favorite)
+                    )
+                }
             }
         },
-        snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState)}
+        snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState) }
     ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
+            contentAlignment = Alignment.Center
         ) {
-            when {
-                state.loading -> {
+            when (state) {
+                is Result.Loading -> {
                     LoadingProgressIndicator()
                 }
-                state.profile != null -> {
+
+                is Result.Success -> {
                     DetailContent(
-                        profile = state.profile!!,
+                        profile = (state as Result.Success).data,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                else -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No data available",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+
+                is Result.Error -> {
+                    Text(
+                        text = "Error: ${(state as Result.Error).throwable.message}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         }
