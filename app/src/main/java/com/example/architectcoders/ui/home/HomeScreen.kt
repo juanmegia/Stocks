@@ -32,9 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.ui.common.LoadingProgressIndicator
-import com.example.architectcoders.domain.Result
+import com.example.architectcoders.Result
+import com.example.architectcoders.domain.Stock
 
 @Composable
 fun HomeScreen(

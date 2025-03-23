@@ -1,9 +1,9 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.architectcoders.domain.Result
+import com.example.architectcoders.Result
 import com.example.architectcoders.domain.StockDetail
-import com.example.architectcoders.domain.ifSuccess
-import com.example.architectcoders.domain.stateAsResultIn
+import com.example.architectcoders.ifSuccess
+import com.example.architectcoders.stateAsResultIn
 import com.example.architectcoders.ui.detail.fetchStockProfileUseCase
 import com.example.architectcoders.ui.detail.toggleFavoriteUseCase
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,8 @@ sealed interface DetailAction {
 
 class DetailViewModel : ViewModel() {
 
-    private val _state = MutableStateFlow<Result<StockDetail>>(Result.Loading)
+    private val _state = MutableStateFlow<Result<StockDetail>>(
+        Result.Loading)
     val uiState: StateFlow<Result<StockDetail>> = _state.asStateFlow()
 
     fun onUiReady(symbol: String) {

@@ -44,7 +44,7 @@ import com.example.architectcoders.domain.CompanyOfficerSummary
 import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.ui.common.LoadingProgressIndicator
 import kotlinx.coroutines.flow.Flow
-import com.example.architectcoders.domain.Result
+import com.example.architectcoders.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

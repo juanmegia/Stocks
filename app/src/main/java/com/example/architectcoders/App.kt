@@ -2,7 +2,8 @@ package com.example.architectcoders
 
 import android.app.Application
 import androidx.room.Room
-import com.example.architectcoders.data.datasource.database.SymbolsDatabase
+import com.example.architectcoders.framework.database.SymbolsDatabase
+
 
 class App: Application() {
     companion object {

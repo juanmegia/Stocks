@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.architectcoders.domain.Result
-import com.example.architectcoders.domain.stateAsResultIn
+import com.example.architectcoders.Result
+import com.example.architectcoders.stateAsResultIn
 import com.example.architectcoders.ui.detail.fetchStocksUseCase
 import com.example.architectcoders.ui.detail.toggleFavoriteUseCase
 import kotlinx.coroutines.flow.*
@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.*
 
 class HomeViewModel : ViewModel() {
 
-    private val _state = MutableStateFlow<Result<List<Stock>>>(Result.Loading)
+    private val _state = MutableStateFlow<Result<List<Stock>>>(
+        Result.Loading)
     val state: StateFlow<Result<List<Stock>>> = _state.asStateFlow()
 
     fun onUiReady() {
