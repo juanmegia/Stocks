@@ -17,13 +17,13 @@ class SymbolsLocalDataSource(private val symbolsDao: SymbolsDao) : LocalDataSour
 
     override val stocks = symbolsDao.fetchPopularStocks()
     override fun getStockProfile(symbol: String) =
-        symbolsDao.fetchStockProfile(symbol).map { it?.toDomain() } // 🔹 Convierte a dominio
+        symbolsDao.fetchStockProfile(symbol).map { it?.toDomain() }
 
     override suspend fun insertStocks(stocks: List<Stock>) =
-        symbolsDao.saveStocks(stocks.map { it.toDao() }) // 🔹 Convierte a DAO
+        symbolsDao.saveStocks(stocks.map { it.toDao() })
 
     override suspend fun insertStockDetail(stock: StockDetail) =
-        symbolsDao.saveStockDetail(stock.toDao()) // 🔹 Convierte a DAO
+        symbolsDao.saveStockDetail(stock.toDao())
 
     override suspend fun toggleFavorite(symbol: String) {
         symbolsDao.toggleFavorite(symbol)

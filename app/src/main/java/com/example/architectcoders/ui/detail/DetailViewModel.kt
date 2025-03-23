@@ -4,7 +4,8 @@ import com.example.architectcoders.domain.Result
 import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.domain.ifSuccess
 import com.example.architectcoders.domain.stateAsResultIn
-import com.example.architectcoders.ui.detail.repository
+import com.example.architectcoders.ui.detail.fetchStockProfileUseCase
+import com.example.architectcoders.ui.detail.toggleFavoriteUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,7 @@ class DetailViewModel : ViewModel() {
 
     fun onUiReady(symbol: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchStockProfile(symbol)
+            fetchStockProfileUseCase(symbol)
                 .stateAsResultIn(viewModelScope)
                 .collectLatest { result ->
                     _state.value = result as Result<StockDetail>
@@ -40,7 +41,7 @@ class DetailViewModel : ViewModel() {
 
     private fun onFavoriteClick() {
         _state.value.ifSuccess { stockDetail ->
-            viewModelScope.launch { repository.toggleFavorite(stockDetail.companySymbol) }
+            viewModelScope.launch { toggleFavoriteUseCase(stockDetail.companySymbol) }
         }
     }
 }
