@@ -1,4 +1,4 @@
-package com.example.architectcoders.framework.database
+package com.example.architectcoders.data.database.local
 
 import androidx.room.Dao
 import androidx.room.Insert

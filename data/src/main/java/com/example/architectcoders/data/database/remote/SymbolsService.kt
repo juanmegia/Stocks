@@ -1,4 +1,4 @@
-package com.example.architectcoders.framework.remote
+package com.example.architectcoders.data.database.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Query

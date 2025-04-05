@@ -1,22 +1,14 @@
 package com.example.architectcoders
 
 import android.app.Application
-import androidx.room.Room
-import com.example.architectcoders.framework.database.SymbolsDatabase
+import com.example.architectcoders.data.Initializer
 
 
 class App: Application() {
-    companion object {
-        lateinit var instance: App
-            private set
-    }
-
-    lateinit var db : SymbolsDatabase
-        private set
 
     override fun onCreate() {
         super.onCreate()
-        db = Room.databaseBuilder(this, SymbolsDatabase::class.java, "symbols-db") .fallbackToDestructiveMigration().build()
-        instance = this
+        Initializer.app = this
+        Initializer.apiKey = BuildConfig.YAHOO_FINANCE_API_KEY
     }
 }

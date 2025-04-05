@@ -1,6 +1,6 @@
 package com.example.architectcoders.usecases
 
-import com.example.architectcoders.data.SymbolsRepository
+import com.example.architectcoders.domain.repository.SymbolsRepository
 import com.example.architectcoders.domain.StockDetail
 import kotlinx.coroutines.flow.Flow
 

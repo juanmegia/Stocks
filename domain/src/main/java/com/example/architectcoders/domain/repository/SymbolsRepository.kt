@@ -1,7 +1,7 @@
-package com.example.architectcoders.data
+package com.example.architectcoders.domain.repository
 
-import com.example.architectcoders.data.datasource.LocalDataSource
-import com.example.architectcoders.data.datasource.RemoteDataSource
+import com.example.architectcoders.domain.datasource.LocalDataSource
+import com.example.architectcoders.domain.datasource.RemoteDataSource
 import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.domain.StockDetail
 import kotlinx.coroutines.flow.Flow

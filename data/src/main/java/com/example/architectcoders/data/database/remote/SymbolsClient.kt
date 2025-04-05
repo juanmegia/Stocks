@@ -1,6 +1,7 @@
-package com.example.architectcoders.framework.remote
+package com.example.architectcoders.data.database.remote
 
-import com.example.architectcoders.BuildConfig
+
+import com.example.architectcoders.data.Initializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -43,6 +44,6 @@ object SymbolsClient {
 private fun apiKeyAsHeader(chain: Interceptor.Chain) = chain.proceed(
     chain.request().newBuilder()
        .addHeader("x-rapidapi-host", "yahoo-finance15.p.rapidapi.com")
-       .addHeader("x-rapidapi-key", BuildConfig.YAHOO_FINANCE_API_KEY)
+       .addHeader("x-rapidapi-key", Initializer.apiKey)
        .build()
 )

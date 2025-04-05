@@ -19,6 +19,8 @@ hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 jetbrainsKotlinJvm = "2.1.10"
 coroutines = "1.8.0"
+appcompat = "1.6.1"
+material = "1.10.0"
 
 
 [libraries]
@@ -53,6 +55,8 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 # Room
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -62,5 +66,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 
 

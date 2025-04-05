@@ -1,7 +1,7 @@
-package com.example.architectcoders.framework.remote
+package com.example.architectcoders.data.database.remote
 
 import androidx.room.TypeConverter
-import com.example.architectcoders.framework.database.CompanyOfficerSummaryDao
+import com.example.architectcoders.data.database.local.CompanyOfficerSummaryDao
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 

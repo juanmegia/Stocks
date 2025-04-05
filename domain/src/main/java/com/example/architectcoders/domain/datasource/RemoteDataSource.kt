@@ -1,4 +1,4 @@
-package com.example.architectcoders.data.datasource
+package com.example.architectcoders.domain.datasource
 
 import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.domain.StockDetail

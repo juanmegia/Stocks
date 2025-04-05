@@ -22,5 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "ArchitectCoders"
 include(":app")
 include(":domain")
-include(":data")
 include(":usecases")
+include(":data")

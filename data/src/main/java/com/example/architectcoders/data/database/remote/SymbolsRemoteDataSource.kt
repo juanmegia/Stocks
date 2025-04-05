@@ -1,6 +1,6 @@
-package com.example.architectcoders.framework.remote
+package com.example.architectcoders.data.database.remote
 
-import com.example.architectcoders.data.datasource.RemoteDataSource
+import com.example.architectcoders.domain.datasource.RemoteDataSource
 import com.example.architectcoders.domain.CompanyOfficerSummary
 import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.domain.StockDetail

@@ -1,9 +1,9 @@
-package com.example.architectcoders.framework.database
+package com.example.architectcoders.data.database.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.architectcoders.framework.remote.Converters
+import com.example.architectcoders.data.database.remote.Converters
 import kotlinx.serialization.Serializable
 
 @Entity

@@ -1,13 +1,9 @@
-package com.example.architectcoders.framework
+package com.example.architectcoders.data.database.local
 
-import com.example.architectcoders.framework.database.CompanyOfficerSummaryDao
-import com.example.architectcoders.framework.database.StockDao
-import com.example.architectcoders.framework.database.StockDetailDao
 import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.domain.StockDetail
-import com.example.architectcoders.framework.database.SymbolsDao
 import com.example.architectcoders.domain.CompanyOfficerSummary
-import com.example.architectcoders.data.datasource.LocalDataSource
+import com.example.architectcoders.domain.datasource.LocalDataSource
 import kotlinx.coroutines.flow.map
 
 
