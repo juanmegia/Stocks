@@ -1,6 +1,5 @@
 package com.example.architectcoders.ui.detail
 
-import DetailViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -77,14 +76,19 @@ fun DetailScreen(
             )
         },
         floatingActionButton = {
-            if (state is Result.Success) {
-                val favorite = (state as Result.Success).data.isFavorite
-                FloatingActionButton(onClick = { viewModel.onAction(DetailAction.FavoriteClick) }) {
-                    Icon(
-                        imageVector = if (favorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = stringResource(id = R.string.mark_as_favorite)
-                    )
+            when (state) {
+                is Result.Success -> {
+                    val stockDetail = (state as Result.Success).data
+
+                        FloatingActionButton(onClick = { viewModel.onAction(DetailAction.FavoriteClick) }) {
+                            Icon(
+                                imageVector = if (stockDetail.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = stringResource(id = R.string.mark_as_favorite)
+                            )
+
+                    }
                 }
+                else -> {}
             }
         },
         snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState) }
@@ -101,10 +105,11 @@ fun DetailScreen(
                 }
 
                 is Result.Success -> {
-                    DetailContent(
-                        profile = (state as Result.Success).data,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    val stockDetail = (state as Result.Success).data
+                        DetailContent(
+                            profile = stockDetail,
+                            modifier = Modifier.fillMaxSize()
+                        )
                 }
 
                 is Result.Error -> {
@@ -118,9 +123,6 @@ fun DetailScreen(
         }
     }
 }
-
-
-
 
 @Composable
 fun DetailContent(profile: StockDetail, modifier: Modifier) {
@@ -148,7 +150,6 @@ fun DetailContent(profile: StockDetail, modifier: Modifier) {
                     .fillMaxWidth()
                     .clickable { expanded = !expanded }
             )
-
         }
         item {
             InfoItem(label = "Industry", value = profile.industry)
@@ -200,10 +201,20 @@ fun OfficerItem(officer: CompanyOfficerSummary) {
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = officer.name, style = MaterialTheme.typography.bodyLarge)
-        Text(text = officer.title, style = MaterialTheme.typography.bodyMedium)
-        if (officer.totalPay != null) {
-            Text(text = "Total Pay: ${officer.totalPay}", style = MaterialTheme.typography.bodySmall)
+        Text(
+            text = officer.name,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = officer.title,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary
+        )
+        officer.totalPay?.let { pay ->
+            Text(
+                text = pay,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }

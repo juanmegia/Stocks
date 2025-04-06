@@ -9,12 +9,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.architectcoders.Result
 import com.example.architectcoders.stateAsResultIn
-import com.example.architectcoders.ui.detail.fetchStocksUseCase
-import com.example.architectcoders.ui.detail.toggleFavoriteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import com.example.architectcoders.usecases.FetchStocksUseCase
+import com.example.architectcoders.usecases.ToggleFavoriteUseCase
+import javax.inject.Inject
 
-
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val fetchStocksUseCase: FetchStocksUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow<Result<List<Stock>>>(
         Result.Loading)

@@ -1,23 +1,31 @@
+package com.example.architectcoders.ui.detail
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.architectcoders.Result
 import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.ifSuccess
 import com.example.architectcoders.stateAsResultIn
-import com.example.architectcoders.ui.detail.fetchStockProfileUseCase
-import com.example.architectcoders.ui.detail.toggleFavoriteUseCase
+import com.example.architectcoders.usecases.FetchStockProfileUseCase
+import com.example.architectcoders.usecases.ToggleFavoriteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface DetailAction {
     data object FavoriteClick : DetailAction
 }
 
-class DetailViewModel : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(
+    private val fetchStockProfileUseCase: FetchStockProfileUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow<Result<StockDetail>>(
         Result.Loading)

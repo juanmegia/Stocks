@@ -23,7 +23,7 @@ data class AssetProfile(
     val boardRisk: Int = 0,
     val city: String,
     val companyOfficers: List<CompanyOfficer>,
-    val compensationAsOfEpochDate: Int,
+    val compensationAsOfEpochDate: Int = 0,
     val compensationRisk: Int = 0,
     val country: String,
     val fullTimeEmployees: Int,

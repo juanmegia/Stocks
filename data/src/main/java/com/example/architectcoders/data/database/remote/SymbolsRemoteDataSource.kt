@@ -5,15 +5,15 @@ import com.example.architectcoders.domain.CompanyOfficerSummary
 import com.example.architectcoders.domain.Stock
 import com.example.architectcoders.domain.StockDetail
 
-class SymbolsRemoteDataSource(private val symbolsService: SymbolsService) :
+class SymbolsRemoteDataSource(private val client: SymbolsClient) :
     RemoteDataSource {
     override suspend fun fetchPopularStocks(): List<Stock> =
-
-        symbolsService.fetchPopularStocks().body.map { it.toDomainModel() }
+        client.service.fetchPopularStocks().body.map { it.toDomainModel() }
 
     override suspend fun fetchStockProfile(symbol:String): StockDetail =
-        symbolsService.fetchStockDetails(symbol).toDomainModel()
+        client.service.fetchStockDetails(symbol).toDomainModel()
 }
+
 private fun RemoteStock.toDomainModel(): Stock =
     Stock(
         symbol = this.symbol,
