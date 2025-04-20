@@ -1,17 +1,13 @@
-package com.example.architectcoders.detail
+package com.example.architectcoders.ui.detail
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
-import com.example.architectcoders.utils.CoroutinesTestRule
 import com.example.architectcoders.Result
-import com.example.architectcoders.TestApplication
 import com.example.architectcoders.domain.CompanyOfficerSummary
 import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.usecases.FetchStockProfileUseCase
 import com.example.architectcoders.usecases.ToggleFavoriteUseCase
-import com.example.architectcoders.ui.detail.DetailAction
-import com.example.architectcoders.ui.detail.DetailViewModel
-import com.google.ar.core.Config
+import com.example.architectcoders.utils.CoroutinesTestRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.flow.flowOf
@@ -21,15 +17,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.robolectric.annotation.Config
 import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@Config(application = TestApplication::class)
 class DetailViewModelTest {
 
     @get:Rule
@@ -72,7 +65,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `when initialized, state is Loading`() = runTest {
+    fun initialStateIsLoading() = runTest {
         viewModel.uiState.test {
             assertEquals(Result.Loading, awaitItem())
             cancelAndIgnoreRemainingEvents()
@@ -80,7 +73,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `when onUiReady is called, fetches stock profile and updates state`() = runTest {
+    fun onUiReadyFetchesStockProfileAndUpdatesState() = runTest {
         val symbol = "AAPL"
         whenever(fetchStockProfileUseCase(symbol)).thenReturn(flowOf(fakeStockDetail))
 
@@ -94,7 +87,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `when favorite action is triggered, toggles favorite`() = runTest {
+    fun favoriteActionTriggersToggleFavorite() = runTest {
         val symbol = "AAPL"
         whenever(fetchStockProfileUseCase(symbol)).thenReturn(flowOf(fakeStockDetail))
 

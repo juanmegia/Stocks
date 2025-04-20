@@ -92,7 +92,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.androidx.arch.testing)
     testImplementation(libs.hilt.testing)
-    kspTest(libs.hilt.compiler.testing)
+    kspTest(libs.hilt.compiler)
     testImplementation(libs.robolectric)
     
     androidTestImplementation(libs.androidx.junit)
@@ -104,7 +104,7 @@ dependencies {
     androidTestImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.kotlinx.coroutines.test)
-    kspAndroidTest(libs.hilt.compiler.testing)
+    kspAndroidTest(libs.hilt.compiler)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

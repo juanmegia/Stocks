@@ -20,4 +20,5 @@ object TestModule {
 
     @Provides
     fun provideToggleFavoriteUseCase(): ToggleFavoriteUseCase = mock()
+
 } 
