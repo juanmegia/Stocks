@@ -21,6 +21,13 @@ jetbrainsKotlinJvm = "2.1.10"
 coroutines = "1.8.0"
 appcompat = "1.6.1"
 material = "1.10.0"
+mockito = "5.2.1"
+turbine = "1.1.0"
+mockk = "1.13.10"
+archTesting = "2.2.0"
+hiltTesting = "2.51.1"
+robolectric = "4.12.1"
+core = "1.48.0"
 
 
 [libraries]
@@ -49,6 +56,7 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 
 
@@ -57,6 +65,16 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Testing
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+androidx-arch-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archTesting" }
+hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hiltTesting" }
+hilt-compiler-testing = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltTesting" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+core = { group = "com.google.ar", name = "core", version.ref = "core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
