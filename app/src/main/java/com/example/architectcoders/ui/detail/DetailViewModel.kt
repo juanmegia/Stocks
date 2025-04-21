@@ -50,7 +50,8 @@ class DetailViewModel @Inject constructor(
 
     private fun onFavoriteClick() {
         _state.value.ifSuccess { stockDetail ->
-            viewModelScope.launch { toggleFavoriteUseCase(stockDetail.companySymbol) }
+            viewModelScope.launch {
+                toggleFavoriteUseCase(stockDetail.companySymbol) }
         }
     }
 }

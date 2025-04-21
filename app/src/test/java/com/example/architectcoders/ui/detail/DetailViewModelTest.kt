@@ -13,22 +13,26 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.runner.RunWith
 
-//@ExtendWith(MockKExtension::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class DetailViewModelTest {
-    private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     val fetchStockProfileUseCase: FetchStockProfileUseCase = mockk(relaxed = true)
 
     val toggleFavoriteUseCase: ToggleFavoriteUseCase = mockk(relaxed = true)
@@ -54,9 +58,16 @@ class DetailViewModelTest {
         isFavorite = false
     )
 
+
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         viewModel = DetailViewModel(fetchStockProfileUseCase, toggleFavoriteUseCase)
+    }
+
+    @AfterEach
+    fun tearDown(){
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -70,7 +81,7 @@ class DetailViewModelTest {
     @Test
     fun onUiReadyFetchesStockProfileAndUpdatesState() = runTest {
         val symbol = "AAPL"
-        // whenever(fetchStockProfileUseCase(symbol)).thenReturn(flowOf(fakeStockDetail))
+       coEvery {  fetchStockProfileUseCase(symbol)} returns flowOf(fakeStockDetail)
 
         viewModel.onUiReady(symbol)
 
@@ -86,11 +97,13 @@ class DetailViewModelTest {
     fun favoriteActionTriggersToggleFavorite() = runTest {
         val symbol = "AAPL"
         coEvery {fetchStockProfileUseCase(symbol)} returns flowOf(fakeStockDetail)
+        viewModel.uiState.test {
+            viewModel.onUiReady(symbol)
+            assertEquals(Result.Loading, awaitItem())
+            assertEquals(Result.Success(fakeStockDetail), awaitItem())
+            viewModel.onAction(DetailAction.FavoriteClick)
+            coVerify{toggleFavoriteUseCase.invoke(symbol)}
+        }
 
-        viewModel.onUiReady(symbol)
-        viewModel.onAction(DetailAction.FavoriteClick)
-        advanceUntilIdle()
-
-        coVerify{toggleFavoriteUseCase.invoke(symbol)}
     }
 }
