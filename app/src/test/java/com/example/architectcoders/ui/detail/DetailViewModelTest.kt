@@ -7,35 +7,31 @@ import com.example.architectcoders.domain.CompanyOfficerSummary
 import com.example.architectcoders.domain.StockDetail
 import com.example.architectcoders.usecases.FetchStockProfileUseCase
 import com.example.architectcoders.usecases.ToggleFavoriteUseCase
-import com.example.architectcoders.utils.CoroutinesTestRule
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
-import javax.inject.Inject
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@HiltAndroidTest
+import org.junit.runner.RunWith
+
+//@ExtendWith(MockKExtension::class)
 @RunWith(AndroidJUnit4::class)
 class DetailViewModelTest {
+    private val testDispatcher: TestDispatcher = StandardTestDispatcher()
+    val fetchStockProfileUseCase: FetchStockProfileUseCase = mockk(relaxed = true)
 
-    @get:Rule
-    val hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
-
-    @Inject
-    lateinit var fetchStockProfileUseCase: FetchStockProfileUseCase
-
-    @Inject
-    lateinit var toggleFavoriteUseCase: ToggleFavoriteUseCase
+    val toggleFavoriteUseCase: ToggleFavoriteUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: DetailViewModel
 
@@ -58,9 +54,8 @@ class DetailViewModelTest {
         isFavorite = false
     )
 
-    @Before
+    @BeforeEach
     fun setUp() {
-        hiltRule.inject()
         viewModel = DetailViewModel(fetchStockProfileUseCase, toggleFavoriteUseCase)
     }
 
@@ -75,7 +70,7 @@ class DetailViewModelTest {
     @Test
     fun onUiReadyFetchesStockProfileAndUpdatesState() = runTest {
         val symbol = "AAPL"
-        whenever(fetchStockProfileUseCase(symbol)).thenReturn(flowOf(fakeStockDetail))
+        // whenever(fetchStockProfileUseCase(symbol)).thenReturn(flowOf(fakeStockDetail))
 
         viewModel.onUiReady(symbol)
 
@@ -86,14 +81,16 @@ class DetailViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun favoriteActionTriggersToggleFavorite() = runTest {
         val symbol = "AAPL"
-        whenever(fetchStockProfileUseCase(symbol)).thenReturn(flowOf(fakeStockDetail))
+        coEvery {fetchStockProfileUseCase(symbol)} returns flowOf(fakeStockDetail)
 
         viewModel.onUiReady(symbol)
         viewModel.onAction(DetailAction.FavoriteClick)
+        advanceUntilIdle()
 
-        verify(toggleFavoriteUseCase).invoke(symbol)
+        coVerify{toggleFavoriteUseCase.invoke(symbol)}
     }
-} 
+}

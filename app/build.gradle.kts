@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.test
 import java.util.Properties
 
 plugins {
@@ -32,7 +33,9 @@ android {
         val yfApiKey = properties.getProperty("YAHOO_FINANCE_API_KEY")
         buildConfigField("String", "YAHOO_FINANCE_API_KEY", "\"$yfApiKey\"")
     }
-
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -94,17 +97,22 @@ dependencies {
     testImplementation(libs.hilt.testing)
     kspTest(libs.hilt.compiler)
     testImplementation(libs.robolectric)
-    
-    androidTestImplementation(libs.androidx.junit)
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+
+    testImplementation(libs.pragmatists.junitparams)
+    testImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.hilt.testing)
     androidTestImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockito.kotlin)
-    androidTestImplementation(libs.turbine)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.kotlinx.coroutines.test)
     kspAndroidTest(libs.hilt.compiler)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(kotlin("test"))
 }
